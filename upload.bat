@@ -1,3 +1,3 @@
 git add --all
-git commit -m "업로드용 bat.등록"
+git commit -m "오류 확인"
 git push -u origin master
