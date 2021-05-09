@@ -4,6 +4,13 @@
 #include <hidboot.h>
 #include <SPI.h>
 
+#define ITEM1  "8801116007172"
+#define ITEM2 "5060214370172"
+#define ITEM3 "88021331"
+
+uint8_t index = 0;
+char scannedValue[16] = {0, };
+
 class MyParser : public HIDReportParser {
   public:
     MyParser();
@@ -58,12 +65,36 @@ void MyParser::OnKeyScanned(bool upper, uint8_t mod, uint8_t key) {
   uint8_t ascii = KeyToAscii(upper, mod, key);
   Serial.print((char)ascii);
 
-
-  
+  scannedValue[index++] = (char)ascii;
 }
 
 void MyParser::OnScanFinished() {
-  Serial.println(" - Finished");
+  
+  if (strcmp(scannedValue, ITEM1) == 0) {
+  Serial.print(" 담배 ");
+  Serial.println("5000");
+  } 
+  
+  else if (strcmp(scannedValue, ITEM2) == 0) {
+    Serial.print(ITEM2);
+  Serial.print(" 라면 ");
+  Serial.println("1100");
+  }
+
+
+else if (strcmp(scannedValue, ITEM3) == 0)
+  {
+ 
+  Serial.print(" 과자 ");
+  Serial.println("1300");
+    
+    }
+  
+  for (int i = 0; i < 16; i++) {
+  scannedValue[i] = 0;
+  }
+  
+  index = 0;
 }
 
 USB          Usb;
@@ -82,6 +113,18 @@ void setup() {
   delay( 200 );
 
   Hid.SetReportParser(0, &Parser);
+
+  // For debugging
+  /*
+  for (int i = 0; i < 13; i++) {
+    scannedValue[i] = ITEM1[i];
+  }
+  if (strcmp(scannedValue, ITEM1) == 0) {
+    Serial.print(ITEM1);
+    Serial.print(" 담배 ");
+    Serial.println("5000");
+  }
+  */
 }
 
 void loop() {
