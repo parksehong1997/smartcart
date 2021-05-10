@@ -7,7 +7,8 @@
 #define ITEM1  "8801116007172"
 #define ITEM2 "5060214370172"
 #define ITEM3 "88021331"
-
+#define ITEM4 "8809180747307"
+#define ITEM5 "8801402610239"
 uint8_t index = 0;
 char scannedValue[16] = {0, };
 
@@ -89,6 +90,23 @@ else if (strcmp(scannedValue, ITEM3) == 0)
   Serial.println("1300");
     
     }
+
+    else if (strcmp(scannedValue, ITEM4) == 0)
+  {
+ 
+  Serial.print(" 물티슈 ");
+  Serial.println("1000");
+    
+    }
+
+        else if (strcmp(scannedValue, ITEM5) == 0)
+  {
+ 
+  Serial.print(" LAN ");
+  Serial.println("9500");
+    
+    }
+
   
   for (int i = 0; i < 16; i++) {
   scannedValue[i] = 0;
