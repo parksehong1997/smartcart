@@ -52,7 +52,7 @@ void setup(void){
   Serial.println(WiFi.localIP());
 
   if (MDNS.begin("esp8266")) {
-    Serial.println("MDNS responder started");
+    Serial.println("시작하였다.");
   }
 
   server.on("/", handleRoot);

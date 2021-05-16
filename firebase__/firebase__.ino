@@ -13,7 +13,7 @@
 #include <ESP8266WiFi.h>
 #include <FirebaseESP8266.h>
 
-#define WIFI_SSID "1660023"
+#define WIFI_SSID "iPhone"
 #define WIFI_PASSWORD "12345678"
 
 #define FIREBASE_HOST "https://smartcart-c4053-default-rtdb.firebaseio.com/"
