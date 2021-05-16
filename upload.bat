@@ -1,3 +1,3 @@
 git add --all
-git commit -m "vs code 사용후 업로드 해보기"
+git commit -m "아두이노 와이파이연동"
 git push -u origin master
