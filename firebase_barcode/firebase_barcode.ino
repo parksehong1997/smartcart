@@ -11,14 +11,66 @@
 
 #include <ESP8266WiFi.h>
 #include <FirebaseESP8266.h>
+#include <usbhid.h>
+#include <usbhub.h>
+#include <hiduniversal.h>
+#include <hidboot.h>
+#include <SPI.h>
+
+
 
 #define WIFI_SSID "10TEAM"
 #define WIFI_PASSWORD "10wh10wh"
 #define FIREBASE_HOST "https://smartcart-c4053-default-rtdb.firebaseio.com/"
 #define FIREBASE_AUTH "RKDS2rnBRwhh44pYw8kcXxPeItaGXT80QTh42xrn"
-/** The database secret is obsoleted, please use other authentication methods, 
- * see examples in the Authentications folder. 
-*/
+
+
+#define ITEM1  "8801116007172"
+#define ITEM2 "5060214370172"
+#define ITEM3 "88021331"
+#define ITEM4 "8809180747307"
+#define ITEM5 "8801402610239"
+/* 바코드 데이터값을 아이템 갯수로 지정
+ */
+
+uint8_t index = 0;
+char scannedValue[16] = {0, };
+
+class MyParser : public HIDReportParser {
+  public:
+    MyParser();
+    void Parse(USBHID *hid, bool is_rpt_id, uint8_t len, uint8_t *buf);
+  protected:
+    uint8_t KeyToAscii(bool upper, uint8_t mod, uint8_t key);
+    virtual void OnKeyScanned(bool upper, uint8_t mod, uint8_t key);
+    virtual void OnScanFinished();
+};
+
+MyParser::MyParser() {}
+
+void MyParser::Parse(USBHID *hid, bool is_rpt_id, uint8_t len, uint8_t *buf) {
+  // If error or empty, return
+  if (buf[2] == 1 || buf[2] == 0) return;
+
+  for (uint8_t i = 7; i >= 2; i--) {
+    // If empty, skip
+    if (buf[i] == 0) continue;
+
+    // If enter signal emitted, scan finished
+    if (buf[i] == UHS_HID_BOOT_KEY_ENTER) {
+      OnScanFinished();
+    }
+
+    // If not, continue normally
+    else {
+      // If bit position not in 2, it's uppercase words
+      OnKeyScanned(i > 2, buf, buf[i]);
+    }
+
+    return;
+  }
+}
+
 
 //Define FirebaseESP8266 data object
 FirebaseData fbdo;
@@ -75,7 +127,7 @@ void setup()
   Serial.println("------------------------------------");
   Serial.println("Set double test...");
 
-  for (uint8_t i = 0; i < 10; i++)
+  for (uint8_t i = 0; i < 3; i++)
   {
     //Also can use Firebase.set instead of Firebase.setDouble
     if (Firebase.setDouble(fbdo, path + "/Double/Data" + (i + 1), ((i + 1) * 10)))
@@ -97,6 +149,8 @@ void setup()
       Serial.println();
     }
   }
+
+ Hid.SetReportParser(0, &Parser);
 
 }
 
@@ -232,4 +286,5 @@ void printResult(FirebaseData &data)
 
 void loop()
 {
+   Usb.Task();
 }
