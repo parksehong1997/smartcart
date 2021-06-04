@@ -9,8 +9,9 @@
 #define ITEM3 "88021331"
 #define ITEM4 "8809180747307"
 #define ITEM5 "8801402610239"
+
 uint8_t index = 0;
-char scannedValue[16] = {0, };
+char scannedValue[16] = {0,};
 
 class MyParser : public HIDReportParser {
   public:

@@ -33,26 +33,25 @@
 /* 바코드 데이터값을 아이템 갯수로 지정
  */
 
-uint8_t index = 0;
 char scannedValue[16] = {0, };
 
 class MyParser : public HIDReportParser {
   public:
     MyParser();
-    void Parse(USBHID *hid, bool is_rpt_id, uint8_t len, uint8_t *buf);
+    void Parse(USBHID *hid, bool is_rpt_id, char len, char *buf);
   protected:
-    uint8_t KeyToAscii(bool upper, uint8_t mod, uint8_t key);
-    virtual void OnKeyScanned(bool upper, uint8_t mod, uint8_t key);
+    char KeyToAscii(bool upper, char mod, char key);
+    virtual void OnKeyScanned(bool upper, char mod, char key);
     virtual void OnScanFinished();
 };
 
 MyParser::MyParser() {}
 
-void MyParser::Parse(USBHID *hid, bool is_rpt_id, uint8_t len, uint8_t *buf) {
+void MyParser::Parse(USBHID *hid, bool is_rpt_id, char len, char *buf) {
   // If error or empty, return
   if (buf[2] == 1 || buf[2] == 0) return;
 
-  for (uint8_t i = 7; i >= 2; i--) {
+  for (char i = 7; i >= 2; i--) {
     // If empty, skip
     if (buf[i] == 0) continue;
 
@@ -127,7 +126,7 @@ void setup()
   Serial.println("------------------------------------");
   Serial.println("Set double test...");
 
-  for (uint8_t i = 0; i < 3; i++)
+  for (char i = 0; i < 3; i++)
   {
     //Also can use Firebase.set instead of Firebase.setDouble
     if (Firebase.setDouble(fbdo, path + "/Double/Data" + (i + 1), ((i + 1) * 10)))
